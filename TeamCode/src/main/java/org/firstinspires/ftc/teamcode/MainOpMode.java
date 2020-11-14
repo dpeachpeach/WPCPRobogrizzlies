@@ -97,20 +97,24 @@ public class MainOpMode extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
+            double drive =  gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
-            leftPowerFront    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPowerFront   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPowerFront = Range.clip(drive + turn, -1.0, 1.0) ;
+            leftPowerBack = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPowerFront = Range.clip(drive - turn, -1.0, 1.0) ;
+            rightPowerBack = Range.clip(drive + turn, -1.0, 1.0) ;
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
 
             // Send calculated power to wheels
             leftDrive1.setPower(leftPowerFront);
             rightDrive1.setPower(rightPowerFront);
+            leftDrive2.setPower(leftPowerBack);
+            rightDrive2.setPower(rightPowerBack);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerFront, rightPowerFront);
+            telemetry.addData("Motors", "leftfront (%.2f), rightfront (%.2f), leftback (%.2f), rightback (%2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
             telemetry.update();
         }
     }
