@@ -30,7 +30,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -49,7 +48,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Driver Op Mode", group="Linear Opmode")
+@TeleOp(name="MainOpMode", group="Linear Opmode")
 public class MainOpMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -63,7 +62,7 @@ public class MainOpMode extends LinearOpMode {
     // Motor on the back right
     public DcMotor rightDrive2 = null;
     // Motor for the uh thingie? Idk, replace thingie with whatever we have after this?!?!
-    public DcMotor thingie = null;
+//    public DcMotor thingie = null;
 
     @Override
     public void runOpMode() {
