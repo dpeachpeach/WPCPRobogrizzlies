@@ -100,7 +100,6 @@ public class MainOpMode extends LinearOpMode {
             double rightPowerBack;
             double linearExtPower = 0;
 
-
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double y =  -gamepad1.right_stick_x;
@@ -110,13 +109,22 @@ public class MainOpMode extends LinearOpMode {
             leftPowerBack = Range.clip(y + lateral, -1.0, 1.0) ;
             rightPowerFront = Range.clip(y - lateral, -1.0, 1.0) ;
             rightPowerBack = Range.clip(y - lateral, -1.0, 1.0) ;
-
+            //linear extender
             if (gamepad1.y){
                 linearExtPower = 1;
+                ElapsedTime linTimer = new ElapsedTime();
+                if (linTimer.seconds() == 1) {
+                    linearExtPower = 0;
+                }
             }
             if (gamepad1.a){
-                linearExtPower = 0;
+                linearExtPower = -1;
+                ElapsedTime linTimer = new ElapsedTime();
+                if (linTimer.seconds() == 1){
+                    linearExtPower = 0;
+                }
             }
+            // servos
             if (gamepad1.dpad_up){
                 angularServo.setPosition(1);
             }
