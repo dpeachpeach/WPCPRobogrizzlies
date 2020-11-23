@@ -152,6 +152,7 @@ public class MainOpMode extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "leftfront (%.2f), rightfront (%.2f), leftback (%.2f), rightback (%2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
+            telemetry.addData("Servos", "angularServo (%.2f), clawServo (%2f)", angularServo.getPosition(), clawServo.getPosition());
             telemetry.update();
         }
     }
