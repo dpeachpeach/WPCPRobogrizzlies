@@ -127,18 +127,11 @@ public class MainOpMode extends LinearOpMode {
                 }
             }
             // servos
-            if (gamepad1.left_bumper){
-                angularServo.setPosition(1.0);
-            }
-            else if (gamepad1.right_bumper){
-                angularServo.setPosition(0.0);
-            }
-            if (gamepad1.x){
-                clawServo.setPosition(1.0);
-            }
-            else if (gamepad1.b){
-                clawServo.setPosition(0.0);
-            }
+            if (gamepad1.left_bumper) angularServo.setPosition(1.0);
+            else if (gamepad1.right_bumper) angularServo.setPosition(0.0);
+
+            if (gamepad1.x) clawServo.setPosition(1.0);
+            else if (gamepad1.b) clawServo.setPosition(0.0);
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
 
