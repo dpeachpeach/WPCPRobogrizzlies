@@ -89,6 +89,8 @@ public class MainOpMode extends LinearOpMode {
         // runs the moment robot is initialized
         waitForStart();
         runtime.reset();
+        clawServo.setPosition(Servo.MAX_POSITION);
+        angularServo.setPosition(.5);
 
         // runs after driver presses play
         while (opModeIsActive()) {
@@ -126,16 +128,16 @@ public class MainOpMode extends LinearOpMode {
             }
             // servos
             if (gamepad1.dpad_up){
-                angularServo.setPosition(1);
+                angularServo.setPosition(Servo.MAX_POSITION);
             }
-            if (gamepad1.dpad_down){
-                angularServo.setPosition(0);
+            else if (gamepad1.dpad_down){
+                angularServo.setPosition(Servo.MIN_POSITION);
             }
             if (gamepad1.dpad_right){
                 clawServo.setPosition(.5);
             }
-            if (gamepad1.dpad_left){
-                clawServo.setPosition(0);
+            else if (gamepad1.dpad_left){
+                clawServo.setPosition(Servo.MIN_POSITION);
             }
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
