@@ -83,17 +83,22 @@ public class MainOpMode extends LinearOpMode {
         leftDrive2 = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_back_drive");
         linearExtender = hardwareMap.get(DcMotor.class, "linear");
-        clawServo = hardwareMap.get(Servo.class, "claw");
-        angularServo = hardwareMap.get(Servo.class, "arm");
+
+
 
         // runs the moment robot is initialized
         waitForStart();
         runtime.reset();
-        clawServo.setPosition(Servo.MAX_POSITION);
-        angularServo.setPosition(.5);
+
 
         // runs after driver presses play
         while (opModeIsActive()) {
+
+
+            clawServo = hardwareMap.get(Servo.class, "claw");
+            angularServo = hardwareMap.get(Servo.class, "arm");
+            clawServo.setPosition(1);
+            angularServo.setPosition(.5);
 
             // telemetry variable setup. Eventual setup for encoders. (DP)
             double leftPowerFront;
