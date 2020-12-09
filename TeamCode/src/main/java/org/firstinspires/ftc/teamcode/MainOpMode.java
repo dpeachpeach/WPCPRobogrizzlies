@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,8 +62,12 @@ public class MainOpMode extends LinearOpMode {
     public DcMotor leftDrive2 = null;
     // Motor on the back right
     public DcMotor rightDrive2 = null;
-    // Motor for the uh thingie? Idk, replace thingie with whatever we have after this?!?!
-//    public DcMotor thingie = null;
+    // Motor for linear extender
+    public DcMotor linearExtender = null;
+    // Claw Servo
+    public Servo clawServo = null;
+    // Arm Servo
+    public Servo angularServo = null;
 
     @Override
     public void runOpMode() {
@@ -77,31 +82,61 @@ public class MainOpMode extends LinearOpMode {
         rightDrive1 = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftDrive2 = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_back_drive");
+        linearExtender = hardwareMap.get(DcMotor.class, "linear");
+
+
 
         // runs the moment robot is initialized
         waitForStart();
         runtime.reset();
 
+
         // runs after driver presses play
         while (opModeIsActive()) {
+
+
+            clawServo = hardwareMap.get(Servo.class, "claw");
+            angularServo = hardwareMap.get(Servo.class, "arm");
+            clawServo.setPosition(1);
+            angularServo.setPosition(.5);
 
             // telemetry variable setup. Eventual setup for encoders. (DP)
             double leftPowerFront;
             double rightPowerFront;
             double leftPowerBack;
             double rightPowerBack;
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+            double linearExtPower = 0;
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive =  gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPowerFront = Range.clip(drive + turn, -1.0, 1.0) ;
-            leftPowerBack = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPowerFront = Range.clip(drive - turn, -1.0, 1.0) ;
-            rightPowerBack = Range.clip(drive + turn, -1.0, 1.0) ;
+            double y =  -gamepad1.right_stick_x;
+            double lateral = gamepad1.left_stick_y;
+
+            leftPowerFront = Range.clip(y + lateral, -1.0, 1.0) ;
+            leftPowerBack = Range.clip(y + lateral, -1.0, 1.0) ;
+            rightPowerFront = Range.clip(y - lateral, -1.0, 1.0) ;
+            rightPowerBack = Range.clip(y - lateral, -1.0, 1.0) ;
+            //linear extender
+            if (gamepad1.y){
+                linearExtPower = 1;
+                ElapsedTime linTimer = new ElapsedTime();
+                if (linTimer.seconds() == 1) {
+                    linearExtPower = 0;
+                }
+            }
+            if (gamepad1.a){
+                linearExtPower = -1;
+                ElapsedTime linTimer = new ElapsedTime();
+                if (linTimer.seconds() == 1){
+                    linearExtPower = 0;
+                }
+            }
+            // servos
+            if (gamepad1.left_bumper) angularServo.setPosition(1.0);
+            else if (gamepad1.right_bumper) angularServo.setPosition(0.0);
+
+            if (gamepad1.x) clawServo.setPosition(1.0);
+            else if (gamepad1.b) clawServo.setPosition(0.0);
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
 
@@ -110,10 +145,12 @@ public class MainOpMode extends LinearOpMode {
             rightDrive1.setPower(rightPowerFront);
             leftDrive2.setPower(leftPowerBack);
             rightDrive2.setPower(rightPowerBack);
+            linearExtender.setPower(linearExtPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "leftfront (%.2f), rightfront (%.2f), leftback (%.2f), rightback (%2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
+            telemetry.addData("Servos", "angularServo (%.2f), clawServo (%2f)", angularServo.getPosition(), clawServo.getPosition());
             telemetry.update();
         }
     }
