@@ -62,6 +62,8 @@ public class MainOpMode extends LinearOpMode {
     public DcMotor leftDrive2 = null;
     // Motor on the back right
     public DcMotor rightDrive2 = null;
+    // Conveyor belt
+    public DcMotor conveyorBelt = null;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -75,7 +77,7 @@ public class MainOpMode extends LinearOpMode {
         rightDrive1 = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftDrive2 = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+        conveyorBelt = hardwareMap.get(DcMotor.class, "conveyor");
 
 
         // runs the moment robot is initialized
@@ -90,6 +92,7 @@ public class MainOpMode extends LinearOpMode {
             double rightPowerFront;
             double leftPowerBack;
             double rightPowerBack;
+            double conveyorPower;
 
             // POV Mode uses left stick to go forward and to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
@@ -101,6 +104,10 @@ public class MainOpMode extends LinearOpMode {
             rightPowerFront = Range.clip(lateral - vertical, -1.0, 1.0);
             rightPowerBack = Range.clip(lateral - vertical, -1.0, 1.0);
 
+            double conveyorInput = gamepad1.right_stick_y;
+            conveyorPower = Range.clip(conveyorInput, -1.0, 1.0);
+
+
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
 
@@ -109,10 +116,19 @@ public class MainOpMode extends LinearOpMode {
             rightDrive1.setPower(rightPowerFront);
             leftDrive2.setPower(leftPowerBack);
             rightDrive2.setPower(rightPowerBack);
+            conveyorBelt.setPower(conveyorPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "leftfront (%.2f), rightfront (%.2f), leftback (%.2f), rightback (%2f)", leftPowerFront, rightPowerFront, leftPowerBack, rightPowerBack);
+            telemetry.addData(
+                    "Motors",
+                    "leftfront (%.2f), rightfront (%.2f), leftback (%.2f), rightback (%.2f), conveyor (%.2f)",
+                    leftPowerFront,
+                    rightPowerFront,
+                    leftPowerBack,
+                    rightPowerBack,
+                    conveyorPower
+            );
             telemetry.update();
         }
     }
