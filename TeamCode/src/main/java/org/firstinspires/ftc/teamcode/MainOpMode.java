@@ -64,6 +64,11 @@ public class MainOpMode extends LinearOpMode {
     public DcMotor rightDrive2 = null;
     // Conveyor belt
     public DcMotor conveyorBelt = null;
+    // Left shooter motor (ultraplanetary)
+    public DcMotor leftShooter = null;
+    // Right shooter motor (ultraplanetary)
+    public DcMotor rightShooter = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -78,7 +83,8 @@ public class MainOpMode extends LinearOpMode {
         leftDrive2 = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_back_drive");
         conveyorBelt = hardwareMap.get(DcMotor.class, "conveyor");
-
+        leftShooter = hardwareMap.get(DcMotor.class, "left_shooter");
+        rightShooter = hardwareMap.get(DcMotor.class, "right_shooter");
 
         // runs the moment robot is initialized
         waitForStart();
@@ -93,6 +99,9 @@ public class MainOpMode extends LinearOpMode {
             double leftPowerBack;
             double rightPowerBack;
             double conveyorPower;
+            double rightShooterPower = 0;
+            double leftShooterPower = 0;
+
 
             // POV Mode uses left stick to go forward and to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
@@ -107,6 +116,15 @@ public class MainOpMode extends LinearOpMode {
             double conveyorInput = gamepad1.right_stick_y;
             conveyorPower = Range.clip(conveyorInput, -1.0, 1.0);
 
+            // inefficient functions for simplification of code + to get shooters to work (Keep this for built in redundancy please)
+            if (gamepad1.right_bumper){
+                rightShooterPower = 1;
+                leftShooterPower = 1;
+            }
+            if (!gamepad1.right_bumper){
+                rightShooterPower = 0;
+                leftShooterPower = 0;
+            }
 
             // I have to talk to Fay on how they want to engineer the turn / drive difference here.
             // Whether we'll do a  4-wheel drive style thing or just have one wheel for a turn
@@ -117,6 +135,8 @@ public class MainOpMode extends LinearOpMode {
             leftDrive2.setPower(leftPowerBack);
             rightDrive2.setPower(rightPowerBack);
             conveyorBelt.setPower(conveyorPower);
+            rightShooter.setPower(rightShooterPower);
+            leftShooter.setPower(leftShooterPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
