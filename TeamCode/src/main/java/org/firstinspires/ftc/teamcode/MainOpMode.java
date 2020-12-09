@@ -91,9 +91,9 @@ public class MainOpMode extends LinearOpMode {
             double leftPowerBack;
             double rightPowerBack;
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
+            // POV Mode uses left stick to go forward and to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double y = -gamepad1.right_stick_x;
+            double y = -gamepad1.left_stick_x;
             double lateral = gamepad1.left_stick_y;
 
             leftPowerFront = Range.clip(y + lateral, -1.0, 1.0);
