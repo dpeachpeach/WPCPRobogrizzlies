@@ -102,34 +102,47 @@ public class AutonomousOpMode extends LinearOpMode {
         }
     }
 
-    void addAutonomousSteps(List<AutonomousStep> steps) {
-        // THIS IS WHERE WE WILL ADD THE AUTONOMOUS STEPS
-        //
-        // like imagine "steps.add(om -> om.runSomething())"
-        // which will add a single "instruction" to the queue
-        // which is then run in the main loop
-
-        // we can write functions that generate a series of steps, for example we could have
-        /*
-
-        void stepForward(List<AutonomousStep> steps) {
-            steps.add(om -> {
-                om.leftFrontMotor.setPower(...);
-                om.rightFrontMotot.setPower(...);
-                ...
-            });
-            steps.add(om -> om.sleep(5000);
-            steps.add(om -> {
-                om.leftFrontMotor.setPower(0);
-                ...
-            });
-        }
-         */
-
+    void setAllDriveMotorPower(double power) {
+        leftDrive1.setPower(power);
+        leftDrive2.setPower(power);
+        rightDrive1.setPower(power);
+        rightDrive2.setPower(power);
     }
 
-    @FunctionalInterface
+    // THIS IS WHERE WE WILL ADD THE AUTONOMOUS STEPS
+    static void addAutonomousSteps(List<AutonomousStep> steps) {
+        addForwardSteps(steps, 1500);
+    }
+
+    static void addForwardSteps(List<AutonomousStep> steps, long ms) {
+        steps.add(new StepSetDriveMotorPower(1.0));
+        steps.add(new StepSleep(ms));
+        steps.add(new StepSetDriveMotorPower(0.0));
+    }
+
     interface AutonomousStep {
         void run(AutonomousOpMode mode);
+    }
+
+    static class StepSetDriveMotorPower implements  AutonomousStep {
+        double drivePower;
+        StepSetDriveMotorPower(double drivePower) {
+            this.drivePower = drivePower;
+        }
+        @Override
+        public void run(AutonomousOpMode mode) {
+            mode.setAllDriveMotorPower(drivePower);
+        }
+    }
+
+    static class StepSleep implements AutonomousStep {
+        long ms;
+        StepSleep(long ms) {
+            this.ms = ms;
+        }
+        @Override
+        public void run(AutonomousOpMode mode) {
+            mode.sleep(ms);
+        }
     }
 }
