@@ -105,8 +105,8 @@ public class AutonomousOpMode extends LinearOpMode {
     void setAllDriveMotorPower(double power) {
         leftDrive1.setPower(power);
         leftDrive2.setPower(power);
-        rightDrive1.setPower(power);
-        rightDrive2.setPower(power);
+        rightDrive1.setPower(-power);
+        rightDrive2.setPower(-power);
     }
 
     // THIS IS WHERE WE WILL ADD THE AUTONOMOUS STEPS
