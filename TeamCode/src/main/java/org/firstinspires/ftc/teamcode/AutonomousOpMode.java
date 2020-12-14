@@ -28,16 +28,17 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import android.text.method.MovementMethod;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+
+import static com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE;
 
 
 /**
@@ -45,104 +46,132 @@ import java.util.Queue;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AutonomousOpMode", group="Linear Opmode")
+@Autonomous(name = "AutonomousOpMode", group = "Autonomous")
 public class AutonomousOpMode extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     // Motor on the front left
-    public DcMotor leftDrive1 = null;
+    public DcMotor leftDrive1;
     // Motor on the front right
-    public DcMotor rightDrive1 = null;
+    public DcMotor rightDrive1;
     // Motor on the back left
-    public DcMotor leftDrive2 = null;
+    public DcMotor leftDrive2;
     // Motor on the back right
-    public DcMotor rightDrive2 = null;
+    public DcMotor rightDrive2;
     // Conveyor belt
-    public DcMotor conveyorBelt = null;
+    public DcMotor conveyorBelt;
     // Left shooter motor (ultraplanetary)
-    public DcMotor leftShooter = null;
+    public DcMotor leftShooter;
     // Right shooter motor (ultraplanetary)
-    public DcMotor rightShooter = null;
+    public DcMotor rightShooter;
+    // Servo to turn the conveyor
+    public Servo conveyorServo;
 
     @Override
     public void runOpMode() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        leftDrive1  = hardwareMap.get(DcMotor.class, "left_front_drive");
+        // DAVID PETRE: Initialize hardware vars, see note below.
+        // Be advised, until robot is properly configured, the devicenames are PLACEHOLDERS.
+        // We need to replace them with what we eventually write down when we config
+
+        leftDrive1 = hardwareMap.get(DcMotor.class, "left_front_drive");
         rightDrive1 = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftDrive2 = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_back_drive");
         conveyorBelt = hardwareMap.get(DcMotor.class, "conveyor");
         leftShooter = hardwareMap.get(DcMotor.class, "left_shooter");
         rightShooter = hardwareMap.get(DcMotor.class, "right_shooter");
+        conveyorServo = hardwareMap.get(Servo.class, "floorAntiscuffer");
+
 
         // runs the moment robot is initialized
         waitForStart();
         runtime.reset();
+        conveyorServo.setPosition(0);
 
-        ArrayList<AutonomousStep> steps = new ArrayList<>();
-        addAutonomousSteps(steps);
 
         // runs after driver presses play
-        for (AutonomousStep step : steps) {
-            if (!opModeIsActive())
-                break;
-
-            step.run(this);
+        while (opModeIsActive()) {
+            Moving(20,1);
+            turn45(1);
+            jobsDone();
         }
     }
 
-    void setAllDriveMotorPower(double power) {
-        leftDrive1.setPower(power);
-        leftDrive2.setPower(power);
-        rightDrive1.setPower(-power);
-        rightDrive2.setPower(-power);
-    }
 
-    // THIS IS WHERE WE WILL ADD THE AUTONOMOUS STEPS
-    static void addAutonomousSteps(List<AutonomousStep> steps) {
-        addForwardSteps(steps, 1500);
-    }
-
-    static void addForwardSteps(List<AutonomousStep> steps, long ms) {
-        steps.add(new StepSetDriveMotorPower(1.0));
-        steps.add(new StepSleep(ms));
-        steps.add(new StepSetDriveMotorPower(0.0));
-    }
-
-    interface AutonomousStep {
-        void run(AutonomousOpMode mode);
-    }
-
-    static class StepSetDriveMotorPower implements  AutonomousStep {
-        double drivePower;
-        StepSetDriveMotorPower(double drivePower) {
-            this.drivePower = drivePower;
+    public void Moving(int inches, int direction){
+        if (direction == 1){
+            leftDrive1.setPower(1);
+            rightDrive1.setPower(1);
+            leftDrive2.setPower(1);
+            rightDrive2.setPower(1);
+            sleep(inches * 100);
+            leftDrive1.setPower(0);
+            rightDrive1.setPower(0);
+            leftDrive2.setPower(0);
+            rightDrive2.setPower(0);
         }
-        @Override
-        public void run(AutonomousOpMode mode) {
-            mode.setAllDriveMotorPower(drivePower);
+        if (direction == -1){
+            leftDrive1.setPower(-1);
+            rightDrive1.setPower(-1);
+            leftDrive2.setPower(-1);
+            rightDrive2.setPower(-1);
+            sleep(inches * 100);
+            leftDrive1.setPower(0);
+            rightDrive1.setPower(0);
+            leftDrive2.setPower(0);
+            rightDrive2.setPower(0);
         }
     }
+    public void turn45(int direction){
+        if (direction == 1){
+            leftDrive1.setPower(-.5);
+            leftDrive2.setPower(-.5);
+            rightDrive1.setPower(.5);
+            rightDrive2.setPower(.5);
+            sleep(750);
+        }
+        if (direction == -1){
+            leftDrive1.setPower(.5);
+            leftDrive2.setPower(.5);
+            rightDrive1.setPower(-.5);
+            rightDrive2.setPower(-.5);
+            sleep(750);
+        }
+    }
+    public void jobsDone(){
+        leftDrive1.setPower(0);
+        leftDrive2.setPower(0);
+        rightDrive1.setPower(0);
+        rightDrive2.setPower(0);
+    }
 
-    static class StepSleep implements AutonomousStep {
-        long ms;
-        StepSleep(long ms) {
-            this.ms = ms;
-        }
-        @Override
-        public void run(AutonomousOpMode mode) {
-            mode.sleep(ms);
-        }
+    public void lowerConveyor(){
+        conveyorServo.setPosition(0);
+    }
+    public void raiseConveyor(){
+        conveyorServo.setPosition(1);
+    }
+    public void startShooter(){
+        leftShooter.setPower(-1);
+        rightShooter.setPower(1);
+    }
+    public void startConveyor(){
+        conveyorBelt.setPower(1);
+    }
+    public void stopConveyor(){
+        conveyorBelt.setPower(0);
     }
 }
