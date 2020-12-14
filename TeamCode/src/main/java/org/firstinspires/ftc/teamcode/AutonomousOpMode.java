@@ -111,6 +111,10 @@ public class AutonomousOpMode extends LinearOpMode {
             raiseConveyor();
             startConveyor();
             startShooter();
+            sleep(2000);
+            stopShooter();
+            lateralDrive(6,1);
+
             jobsDone();
         }
     }
@@ -176,6 +180,10 @@ public class AutonomousOpMode extends LinearOpMode {
     public void startShooter(){
         leftShooter.setPower(-1);
         rightShooter.setPower(1);
+    }
+    public void stopShooter(){
+        leftShooter.setPower(0);
+        rightShooter.setPower(0);
     }
     public void startConveyor(){
         conveyorBelt.setPower(1);
