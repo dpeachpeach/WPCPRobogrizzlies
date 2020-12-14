@@ -106,15 +106,13 @@ public class AutonomousOpMode extends LinearOpMode {
 
         // runs after driver presses play
         while (opModeIsActive()) {
+            conveyorServo.setPosition(1);
             raiseConveyor();
             sleep(5000);
-            turn45(-1);
-            sleep(5000);
-            Moving(24,1);
-            sleep(5000);
+            Moving(24,-1);
             turn45(1);
             sleep(5000);
-            Moving(12,1);
+            Moving(12,-1);
             sleep(5000);
             raiseConveyor();
             sleep(5000);
