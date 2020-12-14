@@ -107,11 +107,12 @@ public class MainOpMode extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double lateral = -gamepad1.left_stick_x;
             double vertical = -gamepad1.left_stick_y;
+            double turning = -gamepad1.right_stick_x;
 
-            leftPowerFront = Range.clip(lateral + vertical, -1.0, 1.0);
-            leftPowerBack = Range.clip(lateral + vertical, -1.0, 1.0);
-            rightPowerFront = Range.clip(lateral - vertical, -1.0, 1.0);
-            rightPowerBack = Range.clip(lateral - vertical, -1.0, 1.0);
+            leftPowerFront = Range.clip(turning + vertical - lateral, -1.0, 1.0);
+            leftPowerBack = Range.clip(turning + vertical + lateral, -1.0, 1.0);
+            rightPowerFront = Range.clip(turning - vertical - lateral, -1.0, 1.0);
+            rightPowerBack = Range.clip(turning - vertical + lateral, -1.0, 1.0);
 
             double conveyorInput = gamepad1.right_stick_y;
             conveyorPower = Range.clip(conveyorInput, -1.0, 1.0);

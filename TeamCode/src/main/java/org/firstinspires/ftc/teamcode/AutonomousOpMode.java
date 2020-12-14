@@ -183,4 +183,21 @@ public class AutonomousOpMode extends LinearOpMode {
     public void stopConveyor(){
         conveyorBelt.setPower(0);
     }
+
+    public void lateralDrive(int inches, int direction){
+        if (direction == 1){
+        leftDrive1.setPower(-1);
+        leftDrive2.setPower(1);
+        rightDrive1.setPower(1);
+        rightDrive2.setPower(-1);
+        sleep(inches * 10);
+        }
+        if (direction == -1){
+        leftDrive1.setPower(1);
+        leftDrive2.setPower(-1);
+        rightDrive1.setPower(-1);
+        rightDrive2.setPower(1);
+        sleep(inches * 10);
+        }
+    }
 }
