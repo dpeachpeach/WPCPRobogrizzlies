@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -94,7 +95,8 @@ public class AutonomousOpMode extends LinearOpMode {
         leftShooter = hardwareMap.get(DcMotor.class, "left_shooter");
         rightShooter = hardwareMap.get(DcMotor.class, "right_shooter");
         conveyorServo = hardwareMap.get(Servo.class, "floorAntiscuffer");
-
+        leftDrive2.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftDrive1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // runs the moment robot is initialized
         waitForStart();
