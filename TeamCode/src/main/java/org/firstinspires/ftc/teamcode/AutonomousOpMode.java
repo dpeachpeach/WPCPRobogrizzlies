@@ -104,8 +104,13 @@ public class AutonomousOpMode extends LinearOpMode {
 
         // runs after driver presses play
         while (opModeIsActive()) {
-            Moving(20,1);
+            turn45(-1);
+            Moving(24,1);
             turn45(1);
+            Moving(12,1);
+            raiseConveyor();
+            startConveyor();
+            startShooter();
             jobsDone();
         }
     }
@@ -156,6 +161,10 @@ public class AutonomousOpMode extends LinearOpMode {
         leftDrive2.setPower(0);
         rightDrive1.setPower(0);
         rightDrive2.setPower(0);
+        leftShooter.setPower(0);
+        rightShooter.setPower(0);
+        conveyorServo.setPosition(1);
+        conveyorBelt.setPower(0);
     }
 
     public void lowerConveyor(){
